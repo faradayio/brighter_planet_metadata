@@ -1,0 +1,3 @@
+module BrighterPlanetMetadata
+  # Your code goes here...
+end
