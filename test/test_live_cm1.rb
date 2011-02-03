@@ -19,11 +19,7 @@ class TestLiveCm1 < Test::Unit::TestCase
     FileUtils.mkdir_p '/etc/brighterplanet'
     File.open('/etc/brighterplanet/universe', 'w') { |f| f.write 'cm1_production' }
   end
-  
-  def teardown
-    FakeFS.deactivate!
-  end
-  
+    
   def test_universe
     assert_equal 'cm1_production', ::BrighterPlanet.metadata.send(:universe)
   end
@@ -50,12 +46,8 @@ class TestLiveCm1 < Test::Unit::TestCase
   end
 
   def test_what_must_come_from_other_sources
-    assert_raises(FakeWeb::NetConnectNotAllowedError) do
-      ::BrighterPlanet.metadata.certified_emitters
-    end
-    assert_raises(FakeWeb::NetConnectNotAllowedError) do
-      ::BrighterPlanet.metadata.resources
-    end
+    assert_equal ::BrighterPlanet::Metadata::FALLBACK['certified_emitters'], ::BrighterPlanet.metadata.certified_emitters
+    assert_equal ::BrighterPlanet::Metadata::FALLBACK['resources'], ::BrighterPlanet.metadata.resources
   end
     
   def test_certified_emitters_as_though_from_certified

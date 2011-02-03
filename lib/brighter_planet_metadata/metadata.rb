@@ -13,12 +13,12 @@ module BrighterPlanet
     include ::Singleton
     LIVE_URL = {
       'datasets'            => 'http://data.brighterplanet.com/datasets.json',
-      'beta_datasets'       => 'http://data.brighterplanet.com/datasets/beta.json',
+      'beta_datasets'       => 'http://data.brighterplanet.com/datasets.json',
       'emitters'            => 'http://carbon.brighterplanet.com/emitters.json',
-      'beta_emitters'       => 'http://carbon.brighterplanet.com/emitters/beta.json',
+      'beta_emitters'       => 'http://carbon.brighterplanet.com/emitters.json',
       'certified_emitters'  => 'http://certified.carbon.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
-      'beta_resources'      => 'http://data.brighterplanet.com/resources/beta.json',
+      'beta_resources'      => 'http://data.brighterplanet.com/resources.json',
     }.freeze
     
     # sabshere 2/2/11 fallbacks current as of today
@@ -93,7 +93,7 @@ module BrighterPlanet
       @universe ||= if ::File.readable? '/etc/brighterplanet/universe'
         ::File.read('/etc/brighterplanet/universe').chomp
       else
-        'foreign'
+        'unknown'
       end
     end
     
@@ -102,24 +102,22 @@ module BrighterPlanet
       k = k.to_s
       ivar_name = :"@#{k}"
       if cached_v = instance_variable_get(ivar_name) and cached_v.is_a?(::Array)
-        return ::Marshal.load(::Marshal.dump(cached_v)) # deep copy!
+        return cached_v.map(&:dup) # deep copy of an array with strings
       end
-      v = authoritative_list(k) || FALLBACK[k]
-      instance_variable_set ivar_name, v
-      authoritative_list_or_fallback k
-    end
-    
-    # Used internally to pull a live list, either from inside an application or from a URL
-    def authoritative_list(k)
-      if adapter = adapters.detect { |a| a.authority? universe, k }
+      v = if adapter = adapters.detect { |a| a.authority? universe, k }
         adapter.send k
       else
         begin
-          ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
-        rescue ::SocketError, ::EOFError, ::Timeout::Error, ::Errno::ETIMEDOUT, ::Errno::ENETUNREACH, ::Errno::ECONNRESET, ::Errno::ECONNREFUSED
-          # just return nil so that a fallback is used
+          hsh = ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
+          raise unless hsh.has_key? k
+          hsh[k]
+        rescue
+          FALLBACK[k]
         end
       end
+      raise "Unknown key #{k}" unless v.is_a? ::Array
+      instance_variable_set ivar_name, v
+      authoritative_list_or_fallback k
     end
   end
 end

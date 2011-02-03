@@ -43,10 +43,6 @@ class TestLiveData1 < Test::Unit::TestCase
     File.open('/etc/brighterplanet/universe', 'w') { |f| f.write 'data1_production' }
   end
   
-  def teardown
-    FakeFS.deactivate!
-  end
-  
   def test_universe
     assert_equal 'data1_production', ::BrighterPlanet.metadata.send(:universe)
   end
@@ -77,8 +73,6 @@ class TestLiveData1 < Test::Unit::TestCase
   end
 
   def test_what_must_come_from_other_sources
-    assert_raises(FakeWeb::NetConnectNotAllowedError) do
-      ::BrighterPlanet.metadata.emitters
-    end
+    assert_equal ::BrighterPlanet::Metadata::FALLBACK['emitters'], ::BrighterPlanet.metadata.emitters
   end
 end
