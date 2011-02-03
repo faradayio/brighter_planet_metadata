@@ -4,6 +4,7 @@ require 'active_support'
 require 'active_support/version'
 %w{
   active_support/json
+  active_support/core_ext/object/blank
 }.each do |active_support_3_requirement|
   require active_support_3_requirement
 end if ::ActiveSupport::VERSION::MAJOR == 3
@@ -90,7 +91,9 @@ module BrighterPlanet
     
     # A universe of operation, for example an EngineYard AppCloud "environment"
     def universe
-      @universe ||= if ::File.readable? '/etc/brighterplanet/universe'
+      @universe ||= if ::ENV['BRIGHTER_PLANET_METADATA_FORCE_UNIVERSE'].present?
+        ::ENV['BRIGHTER_PLANET_METADATA_FORCE_UNIVERSE']
+      elsif ::File.readable? '/etc/brighterplanet/universe'
         ::File.read('/etc/brighterplanet/universe').chomp
       else
         'unknown'
