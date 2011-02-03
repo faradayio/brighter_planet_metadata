@@ -24,9 +24,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'fakeweb'
   s.add_development_dependency 'test-unit'
   s.add_development_dependency 'fakefs'
+  s.add_development_dependency 'earth'
   if RUBY_VERSION > '1.9'
     s.add_development_dependency 'ruby-debug19'
   else
+    s.add_development_dependency 'fastercsv' # earth
     s.add_development_dependency 'ruby-debug'
   end
 end

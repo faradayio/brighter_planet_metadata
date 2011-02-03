@@ -3,7 +3,7 @@ require 'helper'
 require 'active_support/json/encoding'
 require 'active_support/inflector/inflections'
 
-class TestLiveRemoteRemote < Test::Unit::TestCase
+class TestLiveRemote < Test::Unit::TestCase
   def setup
     super
     FakeWeb.clean_registry
@@ -31,10 +31,13 @@ class TestLiveRemoteRemote < Test::Unit::TestCase
   
   def test_refresh
     assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')
-    FakeWeb.clean_registry
-    assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter') # now it's using a cache
+    FakeWeb.register_uri :get, 'http://carbon.brighterplanet.com/emitters.json', :status => ["200", "OK"], :body => %w{LiveRemoteRefreshedEmitter}.to_json
+
+    # still the old value because it's cached...
+    assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')
+
     BrighterPlanet.metadata.refresh
-    assert ::BrighterPlanet.metadata.emitters.include?('AutomobileTrip') # now it's using fallbacks
+    assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteRefreshedEmitter')
   end
   
   %w{

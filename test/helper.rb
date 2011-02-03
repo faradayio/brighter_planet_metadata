@@ -15,17 +15,21 @@ class Test::Unit::TestCase
     FakeWeb.clean_registry
     FakeWeb.allow_net_connect = false
     Rails.application.certified = false
+    Rails.root = nil
   end
   def teardown
     FakeFS::FileSystem.clear
     FakeFS.deactivate!
     FakeWeb.allow_net_connect = true
     Rails.application.certified = false
+    Rails.root = nil
   end
 end
 
 require 'singleton'
+require 'active_support/core_ext/module'
 module Rails
+  mattr_accessor :root
   def self.application
     FakeApplication.instance
   end
@@ -37,3 +41,5 @@ module Rails
     end
   end
 end
+
+ENV['BRIGHTER_PLANET_METADATA_DEBUG'] = 'true'

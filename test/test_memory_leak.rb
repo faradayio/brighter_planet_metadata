@@ -1,6 +1,18 @@
 require 'helper'
 
 class TestMemoryLeak < Test::Unit::TestCase
+  def setup
+    super
+    FakeWeb.clean_registry
+    FakeWeb.allow_net_connect = false
+    FakeWeb.register_uri :get, 'http://carbon.brighterplanet.com/emitters.json', :status => ["500", "Urg"], :body => nil
+  end
+  
+  def teardown
+    FakeWeb.allow_net_connect = true
+    FakeWeb.clean_registry
+  end
+  
   def test_attack_array
     # it's possible to attack the local copy...
     local_copy = ::BrighterPlanet.metadata.emitters

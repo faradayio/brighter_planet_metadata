@@ -30,7 +30,11 @@ class TestLiveCm1 < Test::Unit::TestCase
   
   def test_authority
     assert ::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'emitters')
+
+    # you don't have authority to say what's certified...
     assert !::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'certified_emitters')
+    
+    # now you do
     Rails.application.certified = true
     assert ::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'certified_emitters')
   ensure
@@ -44,11 +48,16 @@ class TestLiveCm1 < Test::Unit::TestCase
   def test_beta_emitters
     assert_equal %w{LiveCm1BetaEmitter}, ::BrighterPlanet.metadata.beta_emitters
   end
-  
-  def test_certified_emitters_from_fallbacks
-    assert_equal ::BrighterPlanet::Metadata::URLS_AND_FALLBACKS['certified_emitters'][1], ::BrighterPlanet.metadata.certified_emitters
+
+  def test_what_must_come_from_other_sources
+    assert_raises(FakeWeb::NetConnectNotAllowedError) do
+      ::BrighterPlanet.metadata.certified_emitters
+    end
+    assert_raises(FakeWeb::NetConnectNotAllowedError) do
+      ::BrighterPlanet.metadata.resources
+    end
   end
-  
+    
   def test_certified_emitters_as_though_from_certified
     Rails.application.certified = true
     assert_equal %w{LiveCm1Emitter}, ::BrighterPlanet.metadata.certified_emitters
