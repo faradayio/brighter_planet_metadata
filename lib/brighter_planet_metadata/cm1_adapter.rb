@@ -13,27 +13,14 @@ module BrighterPlanet
         end
       end
       def emitters
-        undifferentiated_emitters - beta_emitters
-      end
-      def beta_emitters
-        undifferentiated_emitters.select do |name|
-          begin
-            "::BrighterPlanet::#{name}::BETA".constantize == true
-          rescue ::NameError
-            false
-          end
-        end
-      end
-      def certified_emitters
-        emitters
-      end
-      private
-      def undifferentiated_emitters
         ary = []
         ::ObjectSpace.each_object(::BrighterPlanet::Emitter) do |obj|
           ary.push obj.name.demodulize
         end
         ary
+      end
+      def certified_emitters
+        emitters
       end
     end
   end

@@ -14,30 +14,19 @@ module BrighterPlanet
     include ::Singleton
     LIVE_URL = {
       'datasets'            => 'http://data.brighterplanet.com/datasets.json',
-      'beta_datasets'       => 'http://data.brighterplanet.com/datasets.json',
       'emitters'            => 'http://carbon.brighterplanet.com/emitters.json',
-      'beta_emitters'       => 'http://carbon.brighterplanet.com/emitters.json',
       'certified_emitters'  => 'http://certified.carbon.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
-      'beta_resources'      => 'http://data.brighterplanet.com/resources.json',
     }.freeze
     
-    # sabshere 2/2/11 fallbacks current as of today
+    # sabshere 2/4/11 obv these have to be updated with some regularity
     FALLBACK = {
-      'datasets'            => %w{ },
-      'beta_datasets'       => %w{ AutomobileIndustry FlightIndustry },
+      'datasets'            => %w{ AutomobileIndustry FlightIndustry },
       'emitters'            => %w{ Automobile AutomobileTrip BusTrip Computation Diet Flight FuelPurchase Lodging Meeting Motorcycle Pet Purchase RailTrip Residence Shipment },
-      'beta_emitters'       => %w{ },
       'certified_emitters'  => %w{ },
       'resources'           => %w{ AirConditionerUse Aircraft AircraftClass AircraftManufacturer Airline Airport AutomobileFuelType AutomobileMake AutomobileMakeFleetYear AutomobileMakeModel AutomobileMakeModelYear AutomobileMakeModelYearVariant AutomobileMakeYear AutomobileSizeClass AutomobileSizeClassYear AutomobileTypeFuelAge AutomobileTypeFuelControl AutomobileTypeFuelYear AutomobileTypeFuelYearControl AutomobileTypeYear Breed BreedGender BusClass Carrier CarrierMode CensusDivision CensusRegion ClimateDivision ClothesMachineUse ComputationPlatform Country DataCenterCompany DietClass DishwasherUse EgridRegion EgridSubregion FlightDistanceClass FlightFuelType FlightSeatClass FlightSegment FoodGroup FuelPrice FuelType FuelYear Gender GreenhouseGas Industry IndustryProduct IndustryProductLine IndustrySector LodgingClass Merchant MerchantCategory MerchantCategoryIndustry PetroleumAdministrationForDefenseDistrict ProductLine ProductLineIndustryProduct RailClass ResidenceAppliance ResidenceClass ResidenceFuelPrice ResidenceFuelType ResidentialEnergyConsumptionSurveyResponse Sector ServerType ServerTypeAlias ShipmentMode Species State Urbanity ZipCode },
-      'beta_resources'      => %w{ },
     }.freeze
     
-    # What beta_resources are available.
-    def beta_resources
-      authoritative_list_or_fallback 'beta_resources'
-    end
-
     # What resources are available.
     def resources
       authoritative_list_or_fallback 'resources'
@@ -46,11 +35,6 @@ module BrighterPlanet
     # What certified_emitters are available.
     def certified_emitters
       authoritative_list_or_fallback 'certified_emitters'
-    end
-
-    # What beta_emitters are available.
-    def beta_emitters
-      authoritative_list_or_fallback 'beta_emitters'
     end
 
     # What emitters are available.
@@ -63,11 +47,6 @@ module BrighterPlanet
       authoritative_list_or_fallback 'datasets'
     end
 
-    # What beta_datasets are available.
-    def beta_datasets
-      authoritative_list_or_fallback 'beta_datasets'
-    end
-        
     # Clear out any cached values
     def refresh
       instance_variables.each { |ivar_name| instance_variable_set ivar_name, nil }
@@ -107,13 +86,14 @@ module BrighterPlanet
       if cached_v = instance_variable_get(ivar_name) and cached_v.is_a?(::Array)
         return cached_v.map(&:dup) # deep copy of an array with strings
       end
-      v = if adapter = adapters.detect { |a| a.authority? universe, k }
+      v = if (adapter = adapters.detect { |a| a.authority? universe, k })
         adapter.send k
       else
         begin
           hsh = ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
-          raise unless hsh.has_key? k
-          hsh[k]
+          kk = (k == 'certified_emitters') ? 'emitters' : k # the certified response will contain an 'emitters' key
+          raise unless hsh.has_key? kk
+          hsh[kk]
         rescue
           FALLBACK[k]
         end

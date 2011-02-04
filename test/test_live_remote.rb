@@ -9,10 +9,10 @@ class TestLiveRemote < Test::Unit::TestCase
     FakeWeb.clean_registry
     FakeWeb.allow_net_connect = false
     {
-      'http://data.brighterplanet.com/datasets.json'              => { 'datasets' => %w{ LiveRemoteDataset }, 'beta_datasets' => %w{ LiveRemoteBetaDataset } },
-      'http://carbon.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter }, 'beta_emitters' => %w{ LiveRemoteBetaEmitter }, 'certified_emitters' => %w{ } },
-      'http://certified.carbon.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter }, 'beta_emitters' => %w{ }, 'certified_emitters' => %w{ LiveRemoteCertifiedEmitter } },
-      'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource }, 'beta_resources' => %w{ LiveRemoteBetaResource } },
+      'http://data.brighterplanet.com/datasets.json'              => { 'datasets' => %w{ LiveRemoteDataset } },
+      'http://carbon.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter } },
+      'http://certified.carbon.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter } },
+      'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource } },
     }.each do |url, hsh|
       FakeWeb.register_uri  :get,
                             url,
@@ -34,12 +34,9 @@ class TestLiveRemote < Test::Unit::TestCase
   
   %w{
     datasets
-    beta_datasets
     emitters
-    beta_emitters
     certified_emitters
     resources
-    beta_resources
   }.each do |kind|
     eval %{
       def test_#{kind}

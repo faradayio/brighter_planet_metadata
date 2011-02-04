@@ -26,6 +26,6 @@ class TestReal < Test::Unit::TestCase
   end
   
   def test_datasets
-    assert ::BrighterPlanet.metadata.beta_datasets.include?('AutomobileIndustry')
+    assert ::BrighterPlanet.metadata.datasets.include?('AutomobileIndustry')
   end
 end

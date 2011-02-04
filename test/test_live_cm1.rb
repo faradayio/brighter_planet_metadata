@@ -6,10 +6,6 @@ module BrighterPlanet
   module LiveCm1Emitter
     extend BrighterPlanet::Emitter
   end
-  module LiveCm1BetaEmitter
-    extend BrighterPlanet::Emitter
-    BETA = true
-  end
 end
 
 class TestLiveCm1 < Test::Unit::TestCase
@@ -41,16 +37,17 @@ class TestLiveCm1 < Test::Unit::TestCase
     assert_equal %w{LiveCm1Emitter}, ::BrighterPlanet.metadata.emitters
   end
   
-  def test_beta_emitters
-    assert_equal %w{LiveCm1BetaEmitter}, ::BrighterPlanet.metadata.beta_emitters
-  end
-
   def test_what_must_come_from_other_sources
-    assert_equal ::BrighterPlanet::Metadata::FALLBACK['certified_emitters'], ::BrighterPlanet.metadata.certified_emitters
     assert_equal ::BrighterPlanet::Metadata::FALLBACK['resources'], ::BrighterPlanet.metadata.resources
   end
-    
-  def test_certified_emitters_as_though_from_certified
+
+  # note: you still get a list of certified emitters! the point is that you, as the edge server, don't decide which ones they are
+  # in other words, nothing is ever certified unless Rails.application.certified?
+  def test_certified_emitters_as_if_on_edge
+    assert_equal ::BrighterPlanet::Metadata::FALLBACK['certified_emitters'], ::BrighterPlanet.metadata.certified_emitters
+  end
+  
+  def test_certified_emitters_as_if_on_certified
     Rails.application.certified = true
     assert_equal %w{LiveCm1Emitter}, ::BrighterPlanet.metadata.certified_emitters
   ensure

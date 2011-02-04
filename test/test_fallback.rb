@@ -18,15 +18,15 @@ class TestFallback < Test::Unit::TestCase
     end
   end
 
-  def test_beta_datasets
-    assert ::BrighterPlanet.metadata.beta_datasets.include? 'AutomobileIndustry'
-  end
-  
   def test_emitters
     assert ::BrighterPlanet.metadata.emitters.include? 'AutomobileTrip'
   end
     
   def test_resources
     assert ::BrighterPlanet.metadata.resources.include? 'AutomobileMake'
+  end
+  
+  def test_datasets
+    assert ::BrighterPlanet.metadata.datasets.include? 'AutomobileIndustry'
   end
 end
