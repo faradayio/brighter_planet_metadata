@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 require 'test/unit'
-require 'ruby-debug'
 require 'fakeweb'
 require 'fakefs/safe'
 require 'fileutils'

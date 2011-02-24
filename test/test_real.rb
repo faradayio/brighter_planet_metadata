@@ -28,4 +28,9 @@ class TestReal < Test::Unit::TestCase
   def test_datasets
     assert ::BrighterPlanet.metadata.datasets.include?('AutomobileIndustry')
   end
+  
+  def test_protocols
+    pend 'protocols.json is not on production CM1 yet'
+    assert ::BrighterPlanet.metadata.protocols.values.include?('The Climate Registry')
+  end
 end

@@ -13,6 +13,7 @@ class TestLiveRemote < Test::Unit::TestCase
       'http://carbon.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter } },
       'http://certified.carbon.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter } },
       'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource } },
+      'http://carbon.brighterplanet.com/protocols.json'            => { 'protocols' => { :fooprotocol => 'Foo Protocol' } },
     }.each do |url, hsh|
       FakeWeb.register_uri  :get,
                             url,
@@ -43,5 +44,9 @@ class TestLiveRemote < Test::Unit::TestCase
         assert ::BrighterPlanet.metadata.#{kind}.include?('LiveRemote#{kind.camelcase.singularize}')
       end
     }
+  end
+  
+  def test_protocols
+    assert ::BrighterPlanet.metadata.protocols.values.include?('Foo Protocol')
   end
 end

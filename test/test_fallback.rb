@@ -10,6 +10,7 @@ class TestFallback < Test::Unit::TestCase
       'http://carbon.brighterplanet.com/emitters.json',
       'http://certified.carbon.brighterplanet.com/emitters.json',
       'http://data.brighterplanet.com/resources.json',
+      'http://carbon.brighterplanet.com/protocols.json',
     ].each do |url|
       FakeWeb.register_uri  :get,
                             url,
@@ -28,5 +29,9 @@ class TestFallback < Test::Unit::TestCase
   
   def test_datasets
     assert ::BrighterPlanet.metadata.datasets.include? 'AutomobileIndustry'
+  end
+  
+  def test_protocols
+    assert ::BrighterPlanet.metadata.protocols.values.include? 'The Climate Registry'
   end
 end

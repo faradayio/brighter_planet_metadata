@@ -17,6 +17,7 @@ module BrighterPlanet
       'emitters'            => 'http://carbon.brighterplanet.com/emitters.json',
       'certified_emitters'  => 'http://certified.carbon.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
+      'protocols'           => 'http://carbon.brighterplanet.com/protocols.json',
     }.freeze
     
     # sabshere 2/4/11 obv these have to be updated with some regularity
@@ -25,6 +26,7 @@ module BrighterPlanet
       'emitters'            => %w{ Automobile AutomobileTrip BusTrip Computation Diet ElectricityUse Flight FuelPurchase Lodging Meeting Motorcycle Pet Purchase RailTrip Residence Shipment },
       'certified_emitters'  => %w{ },
       'resources'           => %w{ AirConditionerUse Aircraft AircraftClass AircraftManufacturer Airline Airport AutomobileFuelType AutomobileMake AutomobileMakeFleetYear AutomobileMakeModel AutomobileMakeModelYear AutomobileMakeModelYearVariant AutomobileMakeYear AutomobileSizeClass AutomobileSizeClassYear AutomobileTypeFuelAge AutomobileTypeFuelControl AutomobileTypeFuelYear AutomobileTypeFuelYearControl AutomobileTypeYear Breed BreedGender BusClass Carrier CarrierMode CensusDivision CensusRegion ClimateDivision ClothesMachineUse ComputationPlatform Country DataCenterCompany DietClass DishwasherUse EgridRegion EgridSubregion FlightDistanceClass FlightFuelType FlightSeatClass FlightSegment FoodGroup FuelPrice FuelType FuelYear Gender GreenhouseGas Industry IndustryProduct IndustryProductLine IndustrySector LodgingClass Merchant MerchantCategory MerchantCategoryIndustry PetroleumAdministrationForDefenseDistrict ProductLine ProductLineIndustryProduct RailClass ResidenceAppliance ResidenceClass ResidenceFuelPrice ResidenceFuelType ResidentialEnergyConsumptionSurveyResponse Sector ServerType ServerTypeAlias ShipmentMode Species State Urbanity ZipCode },
+      'protocols'           => {:ghg_protocol_scope_3 => 'Greenhouse Gas Protocol Scope 3', :iso => 'ISO 14064-1', :tcr => 'The Climate Registry', :ghg_protocol_scope_1 => 'Greenhouse Gas Protocol Scope 1' }
     }.freeze
     
     # What resources are available.
@@ -45,6 +47,11 @@ module BrighterPlanet
     # What datasets are available.
     def datasets
       authoritative_list_or_fallback 'datasets'
+    end
+    
+    # What protocols are recognized
+    def protocols
+      authoritative_list_or_fallback 'protocols'
     end
 
     # Clear out any cached values
@@ -83,8 +90,8 @@ module BrighterPlanet
     def authoritative_list_or_fallback(k)
       k = k.to_s
       ivar_name = :"@#{k}"
-      if cached_v = instance_variable_get(ivar_name) and cached_v.is_a?(::Array)
-        return cached_v.map(&:dup) # deep copy of an array with strings
+      if cached_v = instance_variable_get(ivar_name) and cached_v.is_a?(::Enumerable)
+        return cached_v.is_a?(Hash) ? Hash[cached_v.map(&:dup)] : cached_v.map(&:dup) # deep copy of an array with strings
       end
       v = if (adapter = adapters.detect { |a| a.authority? universe, k })
         adapter.send k
@@ -98,7 +105,7 @@ module BrighterPlanet
           FALLBACK[k]
         end
       end
-      raise "Unknown key #{k}" unless v.is_a? ::Array
+      raise "Unknown key #{k}" unless v.is_a? ::Enumerable
       instance_variable_set ivar_name, v
       authoritative_list_or_fallback k
     end
