@@ -22,6 +22,12 @@ module BrighterPlanet
       def certified_emitters
         emitters
       end
+      def protocols
+        emitters.map(&:constantize).map(&:protocols).flatten.uniq.inject({}) do |memo, p|
+          memo[p] = File.new(File.join(Rails.root, 'app', 'views', 'protocols', 'names', "_#{p}.html.erb")).read.strip 
+          memo
+        end
+      end
     end
   end
 end
