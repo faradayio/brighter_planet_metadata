@@ -13,7 +13,8 @@ class TestLiveRemote < Test::Unit::TestCase
       'http://carbon.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter } },
       'http://certified.carbon.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter } },
       'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource } },
-      'http://carbon.brighterplanet.com/protocols.json'            => { 'protocols' => { :fooprotocol => 'Foo Protocol' } },
+      'http://carbon.brighterplanet.com/protocols.json'           => { 'protocols' => { 'fooprotocol' => 'Foo Protocol' } },
+      'http://carbon.brighterplanet.com/color.json'               => { 'color' => 'magenta'}
     }.each do |url, hsh|
       FakeWeb.register_uri  :get,
                             url,
@@ -48,5 +49,9 @@ class TestLiveRemote < Test::Unit::TestCase
   
   def test_protocols
     assert ::BrighterPlanet.metadata.protocols.values.include?('Foo Protocol')
+  end
+  
+  def test_color
+    assert_equal 'magenta', ::BrighterPlanet.metadata.color
   end
 end

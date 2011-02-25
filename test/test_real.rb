@@ -7,14 +7,12 @@ class TestReal < Test::Unit::TestCase
     FakeWeb.clean_registry
     FakeWeb.allow_net_connect = true
     $old_fallback = BrighterPlanet::Metadata::FALLBACK
-    $stderr.puts "clearing fallbacks..."
-    BrighterPlanet::Metadata.const_set 'FALLBACK', Hash.new([])
+    silence_warnings { BrighterPlanet::Metadata.const_set 'FALLBACK', Hash.new([]) }
   end
   
   def teardown
     super
-    $stderr.puts "restoring fallbacks..."
-    BrighterPlanet::Metadata.const_set 'FALLBACK', $old_fallback
+    silence_warnings { BrighterPlanet::Metadata.const_set 'FALLBACK', $old_fallback }
   end
   
   def test_emitters
@@ -32,5 +30,10 @@ class TestReal < Test::Unit::TestCase
   def test_protocols
     pend 'protocols.json is not on production CM1 yet'
     assert ::BrighterPlanet.metadata.protocols.values.include?('The Climate Registry')
+  end
+  
+  def test_color
+    pend 'color.json is not on production CM1 yet'
+    assert %w{ red blue }.include?(::BrighterPlanet.metadata.color)
   end
 end

@@ -24,9 +24,12 @@ module BrighterPlanet
       end
       def protocols
         emitters.map(&:constantize).map(&:protocols).flatten.uniq.inject({}) do |memo, p|
-          memo[p] = File.new(File.join(Rails.root, 'app', 'views', 'protocols', 'names', "_#{p}.html.erb")).read.strip 
+          memo[p] = ::File.read(::File.join(::Rails.root, 'app', 'views', 'protocols', 'names', "_#{p}.html.erb")).strip
           memo
         end
+      end
+      def color
+        (AuthoritativeDnsResolver.getaddress('carbon.brighterplanet.com') == '184.73.240.13') ? 'red' : 'blue'
       end
     end
   end
