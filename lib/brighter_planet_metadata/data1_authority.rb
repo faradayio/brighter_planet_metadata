@@ -1,7 +1,7 @@
 require 'singleton'
 module BrighterPlanet
   class Metadata
-    class Data1Adapter
+    class Data1Authority
       include ::Singleton
       def authority?(universe, method_id)
         return unless universe == 'data1_production'

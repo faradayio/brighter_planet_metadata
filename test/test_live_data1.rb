@@ -38,7 +38,7 @@ class TestLiveData1 < Test::Unit::TestCase
   end
   
   def test_authority
-    assert ::BrighterPlanet.metadata.send(:data1_adapter).authority?('data1_production', 'resources')
+    assert ::BrighterPlanet.metadata.send(:data1_authority).authority?('data1_production', 'resources')
   end
   
   def test_resources

@@ -21,14 +21,14 @@ class TestLiveCm1 < Test::Unit::TestCase
   end
   
   def test_authority
-    assert ::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'emitters')
+    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'emitters')
 
     # you don't have authority to say what's certified...
-    assert !::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'certified_emitters')
+    assert !::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'certified_emitters')
     
     # now you do
     Rails.application.certified = true
-    assert ::BrighterPlanet::Metadata::Cm1Adapter.instance.authority?('cm1_production', 'certified_emitters')
+    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'certified_emitters')
   ensure
     Rails.application.certified = false
   end

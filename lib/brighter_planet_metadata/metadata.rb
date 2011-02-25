@@ -61,18 +61,18 @@ module BrighterPlanet
     
     private
     
-    autoload :Cm1Adapter, 'brighter_planet_metadata/cm1_adapter'
-    def cm1_adapter
-      Cm1Adapter.instance
+    autoload :Cm1Authority, 'brighter_planet_metadata/cm1_authority'
+    def cm1_authority
+      Cm1Authority.instance
     end
     
-    autoload :Data1Adapter, 'brighter_planet_metadata/data1_adapter'
-    def data1_adapter
-      Data1Adapter.instance
+    autoload :Data1Authority, 'brighter_planet_metadata/data1_authority'
+    def data1_authority
+      Data1Authority.instance
     end
     
-    def adapters
-      [ cm1_adapter, data1_adapter ]
+    def authorities
+      [ cm1_authority, data1_authority ]
     end
     
     # A universe of operation, for example an EngineYard AppCloud "environment"
@@ -93,8 +93,8 @@ module BrighterPlanet
       if cached_v = instance_variable_get(ivar_name) and cached_v.is_a?(::Enumerable)
         return cached_v.is_a?(Hash) ? Hash[cached_v.map(&:dup)] : cached_v.map(&:dup) # deep copy of an array with strings
       end
-      v = if (adapter = adapters.detect { |a| a.authority? universe, k })
-        adapter.send k
+      v = if (authority = authorities.detect { |a| a.authority? universe, k })
+        authority.send k
       else
         begin
           hsh = ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
