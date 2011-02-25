@@ -11,6 +11,8 @@ end if ::ActiveSupport::VERSION::MAJOR == 3
 
 module BrighterPlanet
   class Metadata
+    autoload :AuthoritativeDnsResolver, 'brighter_planet_metadata/authoritative_dns_resolver'
+    
     include ::Singleton
     LIVE_URL = {
       'datasets'            => 'http://data.brighterplanet.com/datasets.json',
