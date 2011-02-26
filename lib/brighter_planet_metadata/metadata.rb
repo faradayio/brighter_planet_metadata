@@ -100,11 +100,13 @@ module BrighterPlanet
       v = authoritative_value_or_fallback k
       case v
       when ::Hash
-        ::Hash[(v.map { |k, vv| [ k.dup, vv.dup] })]
+        ::Hash[(v.map { |k, vv| [ k.to_s.dup, vv.to_s.dup] })]
       when ::Array
-        v.map { |vv| vv.dup }
-      when ::String
-        v.dup
+        v.map { |vv| vv.to_s.dup }
+      when ::String, ::Symbol
+        v.to_s.dup
+      else
+        raise "i only handle arrays of strings, hashes of strings, and strings"
       end
     end
     
