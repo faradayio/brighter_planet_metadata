@@ -28,12 +28,10 @@ class TestReal < Test::Unit::TestCase
   end
   
   def test_protocols
-    pend 'protocols.json is not on production CM1 yet'
     assert ::BrighterPlanet.metadata.protocols.values.include?('The Climate Registry')
   end
   
   def test_color
-    pend 'color.json is not on production CM1 yet'
     assert %w{ red blue }.include?(::BrighterPlanet.metadata.color)
   end
 end
