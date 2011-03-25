@@ -1,0 +1,14 @@
+=brighter_planet_metadata
+
+    $> require 'rubygems'
+    => true 
+    $> require 'brighter_planet_metadata'
+    => true 
+    $> BrighterPlanet.metadata.emitters
+    => ["Residence", "RailTrip", "Purchase", "Pet", "Motorcycle", "Meeting", "Lodging", "FuelPurchase", "Flight", "ElectricityUse", "Diet", "Computation", "BusTrip", "AutomobileTrip", "Automobile", "Shipment"] 
+    $> BrighterPlanet.metadata.resources
+    => ["AirConditionerUse", "Aircraft", "AircraftClass", "AircraftManufacturer", "Airline", "Airport", "AutomobileFuel", "AutomobileMake", "AutomobileMakeFleetYear", "AutomobileMakeModel", "AutomobileMakeModelYear", "AutomobileMakeModelYearVariant", "AutomobileMakeYear", "AutomobileSizeClass", "AutomobileSizeClassYear", "AutomobileTypeFuelAge", "AutomobileTypeFuelControl", "AutomobileTypeFuelYear", "AutomobileTypeFuelYearAge", "AutomobileTypeFuelYearControl", "AutomobileTypeYear", "Breed", "BreedGender", "BusClass", "BusFuel", "BusFuelControl", "BusFuelYearControl", "Carrier", "CarrierMode", "CensusDivision", "CensusRegion", "ClimateDivision", "ClothesMachineUse", "ComputationCarrier", "ComputationCarrierInstanceClass", "ComputationCarrierRegion", "Country", "DietClass", "DishwasherUse", "EgridRegion", "EgridSubregion", "FlightDistanceClass", "FlightFuelType", "FlightSeatClass", "FlightSegment", "FoodGroup", "Fuel", "FuelPrice", "FuelType", "FuelYear", "Gender", "GreenhouseGas", "LodgingClass", "PetroleumAdministrationForDefenseDistrict", "RailClass", "ResidenceAppliance", "ResidenceClass", "ResidenceFuelPrice", "ResidenceFuelType", "ResidentialEnergyConsumptionSurveyResponse", "ShipmentMode", "Species", "State", "Urbanity", "ZipCode"] 
+    $> BrighterPlanet.metadata.protocols
+    => {"ghg_protocol_scope_1"=>"Greenhouse Gas Protocol Scope 1", "tcr"=>"The Climate Registry", "ghg_protocol_scope_3"=>"Greenhouse Gas Protocol Scope 3", "iso"=>"ISO 14064-1"} 
+
+Copyright 2011 Brighter Planet, Inc.
