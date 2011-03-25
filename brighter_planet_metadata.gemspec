@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.name        = "brighter_planet_metadata"
   s.version     = BrighterPlanetMetadata::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Seamus Abshere"]
+  s.authors     = ["Seamus Abshere", "Andy Rossmeissl"]
   s.email       = ["seamus@abshere.net"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/brighterplanet/brighter_planet_metadata"
   s.summary     = %q{Names of Brighter Planet things}
   s.description = %q{What emitters (carbon models), resources (data classes), datasets, etc. we offer.}
 
