@@ -11,8 +11,6 @@ end if ::ActiveSupport::VERSION::MAJOR == 3
 
 module BrighterPlanet
   class Metadata
-    autoload :AuthoritativeDnsResolver, 'brighter_planet_metadata/authoritative_dns_resolver'
-    
     include ::Singleton
     LIVE_URL = {
       'datasets'            => 'http://data.brighterplanet.com/datasets.json',
@@ -20,7 +18,6 @@ module BrighterPlanet
       'certified_emitters'  => 'http://certified.carbon.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
       'protocols'           => 'http://carbon.brighterplanet.com/protocols.json',
-      'color'               => 'http://carbon.brighterplanet.com/color.json'
     }.freeze
     
     # sabshere 2/4/11 obv these have to be updated with some regularity
@@ -30,7 +27,6 @@ module BrighterPlanet
       'certified_emitters'  => %w{ },
       'resources'           => %w{ AirConditionerUse Aircraft AircraftClass AircraftManufacturer Airline Airport AutomobileFuelType AutomobileMake AutomobileMakeFleetYear AutomobileMakeModel AutomobileMakeModelYear AutomobileMakeModelYearVariant AutomobileMakeYear AutomobileSizeClass AutomobileSizeClassYear AutomobileTypeFuelAge AutomobileTypeFuelControl AutomobileTypeFuelYear AutomobileTypeFuelYearControl AutomobileTypeYear Breed BreedGender BusClass Carrier CarrierMode CensusDivision CensusRegion ClimateDivision ClothesMachineUse ComputationPlatform Country DataCenterCompany DietClass DishwasherUse EgridRegion EgridSubregion FlightDistanceClass FlightFuelType FlightSeatClass FlightSegment FoodGroup FuelPrice FuelType FuelYear Gender GreenhouseGas Industry IndustryProduct IndustryProductLine IndustrySector LodgingClass Merchant MerchantCategory MerchantCategoryIndustry PetroleumAdministrationForDefenseDistrict ProductLine ProductLineIndustryProduct RailClass ResidenceAppliance ResidenceClass ResidenceFuelPrice ResidenceFuelType ResidentialEnergyConsumptionSurveyResponse Sector ServerType ServerTypeAlias ShipmentMode Species State Urbanity ZipCode },
       'protocols'           => { 'ghg_protocol_scope_3' => 'Greenhouse Gas Protocol Scope 3', 'iso' => 'ISO 14064-1', 'tcr' => 'The Climate Registry', 'ghg_protocol_scope_1' => 'Greenhouse Gas Protocol Scope 1' },
-      'color'               => 'unknown'
     }.freeze
     
     # What resources are available.
@@ -58,11 +54,6 @@ module BrighterPlanet
       deep_copy_of_authoritative_value_or_fallback 'protocols'
     end
     
-    # What 'color' the emission estimate service is today.
-    def color
-      deep_copy_of_authoritative_value_or_fallback 'color'
-    end
-
     # Clear out any cached values
     def refresh
       # instance_variables.each { |ivar_name| instance_variable_set ivar_name, nil }
@@ -85,17 +76,6 @@ module BrighterPlanet
       [ cm1_authority, data1_authority ]
     end
     
-    # A universe of operation, for example an EngineYard AppCloud "environment"
-    def universe
-      if ::ENV['BRIGHTER_PLANET_METADATA_FORCE_UNIVERSE'].present?
-        ::ENV['BRIGHTER_PLANET_METADATA_FORCE_UNIVERSE']
-      elsif ::File.readable? '/etc/brighterplanet/universe'
-        ::File.read('/etc/brighterplanet/universe').chomp
-      else
-        'unknown'
-      end
-    end
-    
     def deep_copy_of_authoritative_value_or_fallback(k)
       v = authoritative_value_or_fallback k
       case v
@@ -113,7 +93,7 @@ module BrighterPlanet
     # Used internally to pull a live list of emitters/datasets/etc. or fall back to a static one.
     def authoritative_value_or_fallback(k)
       k = k.to_s
-      if (authority = authorities.detect { |a| a.authority? universe, k })
+      if (authority = authorities.detect { |a| a.authority? k })
         authority.send k
       else
         begin

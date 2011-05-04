@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport', '>=2.3.4'
   s.add_dependency 'i18n' # activesupport?
   s.add_dependency 'cache_method'
+  s.add_development_dependency 'brighter_planet_deploy'
   s.add_development_dependency 'fakeweb'
   s.add_development_dependency 'test-unit'
   s.add_development_dependency 'fakefs'

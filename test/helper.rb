@@ -5,6 +5,7 @@ require 'test/unit'
 require 'fakeweb'
 require 'fakefs/safe'
 require 'fileutils'
+require 'active_support/string_inquirer'
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'brighter_planet_metadata'
@@ -14,7 +15,8 @@ class Test::Unit::TestCase
     FakeWeb.clean_registry
     FakeWeb.allow_net_connect = false
     Rails.application.certified = false
-    Rails.root = nil
+    Rails.root = '/var/www/myapp'
+    Rails.env = ActiveSupport::StringInquirer.new 'development'
   end
   def teardown
     FakeFS::FileSystem.clear
@@ -28,7 +30,7 @@ end
 require 'singleton'
 require 'active_support/core_ext/module'
 module Rails
-  mattr_accessor :root
+  mattr_accessor :root, :env
   def self.application
     FakeApplication.instance
   end

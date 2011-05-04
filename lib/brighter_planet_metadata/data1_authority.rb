@@ -1,10 +1,11 @@
+require 'brighter_planet_deploy'
 require 'singleton'
 module BrighterPlanet
   class Metadata
     class Data1Authority
       include ::Singleton
-      def authority?(universe, method_id)
-        return unless universe == 'data1_production'
+      def authority?(method_id)
+        return unless ::Rails.env.production? and ::BrighterPlanet.deploy.servers.me.service == 'ReferenceDataService'
         respond_to? method_id
       end
       def resources

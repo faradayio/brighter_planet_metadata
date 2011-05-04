@@ -12,23 +12,27 @@ class TestLiveCm1 < Test::Unit::TestCase
   def setup
     super
     FakeFS.activate!
-    FileUtils.mkdir_p '/etc/brighterplanet'
-    File.open('/etc/brighterplanet/universe', 'w') { |f| f.write 'cm1_production' }
+    Rails.env = ActiveSupport::StringInquirer.new 'production'
+    Rails.root = '/data/edge/current'
+    FileUtils.mkdir_p '/data/edge/current/config/brighter_planet_deploy'
+    FileUtils.mkdir_p '/data/edge/current/public/brighter_planet_deploy'
+    File.open('/data/edge/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'EmissionEstimateService' }
   end
     
-  def test_universe
-    assert_equal 'cm1_production', ::BrighterPlanet.metadata.send(:universe)
+  def test_self_awareness
+    assert ::Rails.env.production?
+    assert_equal 'EmissionEstimateService', ::BrighterPlanet.deploy.servers.me.service
   end
   
   def test_authority
-    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'emitters')
+    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('emitters')
 
     # you don't have authority to say what's certified...
-    assert !::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'certified_emitters')
+    assert !::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('certified_emitters')
     
     # now you do
     Rails.application.certified = true
-    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('cm1_production', 'certified_emitters')
+    assert ::BrighterPlanet::Metadata::Cm1Authority.instance.authority?('certified_emitters')
   ensure
     Rails.application.certified = false
   end

@@ -18,27 +18,28 @@ class TestLiveData1 < Test::Unit::TestCase
     fake_resource_path = File.join earth_gem_path, 'lib', 'earth', 'live_data1_resource.rb'
     File.open(fake_resource_path, 'w') { |f| f.write "class ::LiveData1Resource < ActiveRecord::Base; end"}
     eval File.read(fake_resource_path) unless defined?(::LiveData1Resource)
+        
+    # faking deploy
+    Rails.env = ActiveSupport::StringInquirer.new 'production'
+    Rails.root = '/var/www/data1/current'
+    FileUtils.mkdir_p '/var/www/data1/current/config/brighter_planet_deploy'
+    FileUtils.mkdir_p '/var/www/data1/current/public/brighter_planet_deploy'
+    File.open('/var/www/data1/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'ReferenceDataService' }
     
     # FAKING DATASETS
-    ::Rails.root = '/data/data1/current'
     eval "class ::Dataset; end"
-    
-    # fake what looks like a dataset
     fake_dataset_path = File.join ::Rails.root, 'app', 'models', 'live_data1_dataset.rb'
     File.open(fake_dataset_path, 'w') { |f| f.write "class ::LiveData1Dataset < Dataset; end"}
     eval File.read(fake_dataset_path) unless defined?(::LiveData1Dataset)
-        
-    # FAKING A UNIVERSE
-    FileUtils.mkdir_p '/etc/brighterplanet'
-    File.open('/etc/brighterplanet/universe', 'w') { |f| f.write 'data1_production' }
   end
-  
-  def test_universe
-    assert_equal 'data1_production', ::BrighterPlanet.metadata.send(:universe)
+
+  def test_self_awareness
+    assert ::Rails.env.production?
+    assert_equal 'ReferenceDataService', ::BrighterPlanet.deploy.servers.me.service
   end
   
   def test_authority
-    assert ::BrighterPlanet.metadata.send(:data1_authority).authority?('data1_production', 'resources')
+    assert ::BrighterPlanet.metadata.send(:data1_authority).authority?('resources')
   end
   
   def test_resources

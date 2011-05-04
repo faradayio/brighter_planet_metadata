@@ -30,8 +30,4 @@ class TestReal < Test::Unit::TestCase
   def test_protocols
     assert ::BrighterPlanet.metadata.protocols.values.include?('The Climate Registry')
   end
-  
-  def test_color
-    assert %w{ red blue }.include?(::BrighterPlanet.metadata.color)
-  end
 end
