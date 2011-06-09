@@ -32,7 +32,7 @@ module BrighterPlanet
       def brighter_planet_server?
         require 'brighter_planet_deploy'
         ::BrighterPlanet.deploy.servers.me.service == 'EmissionEstimateService'
-      rescue
+      rescue ::Exception
         false
       end
     end
