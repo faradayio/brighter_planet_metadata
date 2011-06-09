@@ -1,11 +1,10 @@
-require 'brighter_planet_deploy'
 require 'singleton'
 module BrighterPlanet
   class Metadata
     class Cm1Authority
       include ::Singleton
       def authority?(method_id)
-        return unless ::Rails.env.production? and ::BrighterPlanet.deploy.servers.me.service == 'EmissionEstimateService'
+        return unless ::Rails.env.production? and brighter_planet_server?
         method_id = method_id.to_s
         if method_id == 'certified_emitters'
           ::Rails.application.certified?
@@ -28,6 +27,13 @@ module BrighterPlanet
           memo[p] = ::File.read(::File.join(::Rails.root, 'app', 'views', 'protocols', 'names', "_#{p}.html.erb")).strip
           memo
         end
+      end
+      private
+      def brighter_planet_server?
+        require 'brighter_planet_deploy'
+        ::BrighterPlanet.deploy.servers.me.service == 'EmissionEstimateService'
+      rescue
+        false
       end
     end
   end
