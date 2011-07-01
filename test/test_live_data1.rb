@@ -5,7 +5,7 @@ class TestLiveData1 < Test::Unit::TestCase
   def setup
     super
     # get the real gem path so we can fake it in fakefs (/usr/local/rvm/gems/ruby-1.8.7-head/gems/earth-0.3.11/lib/earth)
-    earth_gem_path = ::File.expand_path(::File.join(::File.dirname(::Gem.required_location('earth', 'earth.rb')), '..'))
+    earth_gem_path = ::File.dirname($LOAD_PATH.grep(/earth/)[0])
     
     FakeFS.activate!
     FileUtils.mkdir_p earth_gem_path
