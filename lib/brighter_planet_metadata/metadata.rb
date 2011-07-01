@@ -5,9 +5,18 @@ require 'active_support/version'
 %w{
   active_support/json
   active_support/core_ext/object/blank
+  active_support/inflector/inflections
 }.each do |active_support_3_requirement|
   require active_support_3_requirement
 end if ::ActiveSupport::VERSION::MAJOR == 3
+
+::ActiveSupport::Inflector.inflections do |inflect|
+  inflect.uncountable %w{ aircraft bts_aircraft }
+  inflect.uncountable 'species'
+  inflect.irregular 'foot', 'feet'
+  inflect.plural /(gas)\z/i, '\1es'
+  inflect.singular /(gas)es\z/i, '\1'
+end
 
 module BrighterPlanet
   class Metadata

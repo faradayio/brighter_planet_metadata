@@ -53,4 +53,13 @@ class TestLiveData1 < Test::Unit::TestCase
   def test_what_must_come_from_other_sources
     assert_equal ::BrighterPlanet::Metadata::FALLBACK['emitters'], ::BrighterPlanet.metadata.emitters
   end
+  
+  def test_inflection
+    assert_equal 'GreenhouseGases', 'GreenhouseGas'.pluralize
+    assert_equal 'greenhouse_gases', 'greenhouse_gas'.pluralize
+    assert_equal 'GreenhouseGas', 'GreenhouseGases'.singularize
+    assert_equal 'Aircraft', 'Aircraft'.pluralize
+    assert_equal 'aircraft', 'aircraft'.pluralize
+    assert_equal 'Aircraft', 'Aircraft'.singularize
+  end
 end

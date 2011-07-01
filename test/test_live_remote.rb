@@ -1,7 +1,6 @@
 require 'helper'
 
 require 'active_support/json/encoding'
-require 'active_support/inflector/inflections'
 
 class TestLiveRemote < Test::Unit::TestCase
   def setup
