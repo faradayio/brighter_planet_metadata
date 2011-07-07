@@ -1,24 +1,23 @@
 require 'helper'
 require 'earth'
 
+class FakeEarth
+  def self.resources
+    [ 'LiveData1Resource' ]
+  end
+end
+
 class TestLiveData1 < Test::Unit::TestCase
   def setup
     super
-    # get the real gem path so we can fake it in fakefs (/usr/local/rvm/gems/ruby-1.8.7-head/gems/earth-0.3.11/lib/earth)
-    earth_gem_path = ::File.dirname($LOAD_PATH.grep(/earth/)[0])
-    
     FakeFS.activate!
-    FileUtils.mkdir_p earth_gem_path
-
-    # FAKING RESOURCES
-    # fake earth.rb so that Gem.required_path can find it
-    File.open(File.join(earth_gem_path, 'lib', 'earth.rb'), 'w') { |f| f.write "module Earth; end" }
     
-    # fake what looks like a resource
-    fake_resource_path = File.join earth_gem_path, 'lib', 'earth', 'live_data1_resource.rb'
-    File.open(fake_resource_path, 'w') { |f| f.write "class ::LiveData1Resource < ActiveRecord::Base; end"}
-    eval File.read(fake_resource_path) unless defined?(::LiveData1Resource)
-        
+    # faking resources
+    eval %{
+      ::OldEarth = ::Earth
+      ::Earth = ::FakeEarth
+    }
+    
     # faking deploy
     Rails.env = ActiveSupport::StringInquirer.new 'production'
     Rails.root = '/var/www/data1/current'
@@ -31,6 +30,13 @@ class TestLiveData1 < Test::Unit::TestCase
     fake_dataset_path = File.join ::Rails.root, 'app', 'models', 'live_data1_dataset.rb'
     File.open(fake_dataset_path, 'w') { |f| f.write "class ::LiveData1Dataset < Dataset; end"}
     eval File.read(fake_dataset_path) unless defined?(::LiveData1Dataset)
+  end
+  
+  def teardown
+    super
+    eval %{
+      ::Earth = ::OldEarth
+    }
   end
 
   def test_self_awareness
