@@ -69,6 +69,12 @@ module BrighterPlanet
       clear_method_cache :authoritative_value_or_fallback
     end
     
+    # for cache_method
+    HASH = 'BrighterPlanet::Metadata.instance'.hash
+    def method_cache_hash
+      HASH
+    end
+    
     private
     
     autoload :Cm1Authority, 'brighter_planet_metadata/cm1_authority'
