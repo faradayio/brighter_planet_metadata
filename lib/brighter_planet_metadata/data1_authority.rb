@@ -4,7 +4,7 @@ module BrighterPlanet
     class Data1Authority
       include ::Singleton
       def authority?(method_id)
-        return unless ::Rails.env.production? and brighter_planet_server?
+        return unless defined?(::Rails) and ::Rails.env.production? and brighter_planet_server?
         respond_to? method_id
       end
       def resources

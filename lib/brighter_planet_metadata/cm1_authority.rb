@@ -4,7 +4,7 @@ module BrighterPlanet
     class Cm1Authority
       include ::Singleton
       def authority?(method_id)
-        return unless ::Rails.env.production? and brighter_planet_server?
+        return unless defined?(::Rails) and ::Rails.env.production? and brighter_planet_server?
         method_id = method_id.to_s
         if method_id == 'certified_emitters'
           ::Rails.application.certified?
