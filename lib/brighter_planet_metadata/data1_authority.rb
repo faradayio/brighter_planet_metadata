@@ -16,7 +16,7 @@ module BrighterPlanet
       private
       def brighter_planet_server?
         require 'brighter_planet_deploy'
-        ::BrighterPlanet.deploy.servers.me.service == 'ReferenceDataService'
+        ::BrighterPlanet.deploy.servers.me.service == 'Data1'
       rescue ::Exception
         false
       end
