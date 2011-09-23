@@ -16,12 +16,12 @@ class TestLiveCm1 < Test::Unit::TestCase
     Rails.root = '/data/edge/current'
     FileUtils.mkdir_p '/data/edge/current/config/brighter_planet_deploy'
     FileUtils.mkdir_p '/data/edge/current/public/brighter_planet_deploy'
-    File.open('/data/edge/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'Cm1' }
+    File.open('/data/edge/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'EmissionEstimateService' }
   end
     
   def test_self_awareness
     assert ::Rails.env.production?
-    assert_equal 'Cm1', ::BrighterPlanet.deploy.servers.me.service
+    assert_equal 'EmissionEstimateService', ::BrighterPlanet.deploy.servers.me.service
   end
   
   def test_authority

@@ -23,7 +23,7 @@ class TestLiveData1 < Test::Unit::TestCase
     Rails.root = '/var/www/data1/current'
     FileUtils.mkdir_p '/var/www/data1/current/config/brighter_planet_deploy'
     FileUtils.mkdir_p '/var/www/data1/current/public/brighter_planet_deploy'
-    File.open('/var/www/data1/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'Data1' }
+    File.open('/var/www/data1/current/config/brighter_planet_deploy/service', 'w') { |f| f.write 'ReferenceDataService' }
     
     # FAKING DATASETS
     eval "class ::Dataset; end"
@@ -41,7 +41,7 @@ class TestLiveData1 < Test::Unit::TestCase
 
   def test_self_awareness
     assert ::Rails.env.production?
-    assert_equal 'Data1', ::BrighterPlanet.deploy.servers.me.service
+    assert_equal 'ReferenceDataService', ::BrighterPlanet.deploy.servers.me.service
   end
   
   def test_authority
