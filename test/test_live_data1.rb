@@ -28,6 +28,7 @@ class TestLiveData1 < Test::Unit::TestCase
     # FAKING DATASETS
     eval "class ::Dataset; end"
     fake_dataset_path = File.join ::Rails.root, 'app', 'models', 'live_data1_dataset.rb'
+    FileUtils.mkdir_p File.dirname(fake_dataset_path)
     File.open(fake_dataset_path, 'w') { |f| f.write "class ::LiveData1Dataset < Dataset; end"}
     eval File.read(fake_dataset_path) unless defined?(::LiveData1Dataset)
   end
