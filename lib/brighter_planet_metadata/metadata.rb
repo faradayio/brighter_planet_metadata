@@ -113,7 +113,7 @@ module BrighterPlanet
       else
         begin
           hsh = ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
-          kk = (k == 'certified_emitters') ? 'emitters' : k # the certified response will contain an 'emitters' key
+          kk = (k == 'certified_emitters') ? 'emitters' : k # the live certified response will contain an 'emitters' key
           raise unless hsh.has_key? kk
           hsh[kk]
         rescue
