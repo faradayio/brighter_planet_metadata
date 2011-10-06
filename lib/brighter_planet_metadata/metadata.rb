@@ -110,6 +110,9 @@ module BrighterPlanet
       k = k.to_s
       if (authority = authorities.detect { |a| a.authority? k })
         authority.send k
+      elsif ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true'
+        $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{k}'}
+        FALLBACK[k]
       else
         begin
           hsh = ::ActiveSupport::JSON.decode eat(LIVE_URL[k])
