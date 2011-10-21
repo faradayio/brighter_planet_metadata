@@ -119,7 +119,7 @@ module BrighterPlanet
           kk = (k == 'certified_emitters') ? 'emitters' : k # the live certified response will contain an 'emitters' key
           raise unless hsh.has_key? kk
           hsh[kk]
-        rescue
+        rescue ::Exception
           FALLBACK[k]
         end
       end
