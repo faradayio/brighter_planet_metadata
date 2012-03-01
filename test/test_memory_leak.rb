@@ -3,9 +3,7 @@ require 'helper'
 class TestMemoryLeak < Test::Unit::TestCase
   def setup
     super
-    FakeWeb.clean_registry
-    FakeWeb.allow_net_connect = false
-    FakeWeb.register_uri :get, 'http://carbon.brighterplanet.com/emitters.json', :status => ["500", "Urg"], :body => nil
+    WebMock.stub_request(:get, 'http://impact.brighterplanet.com/emitters.json').to_return(:status => 500)
   end
     
   def test_attack_array

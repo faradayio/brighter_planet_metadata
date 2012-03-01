@@ -1,7 +1,7 @@
 require 'cache_method'
+require 'brighter_planet_metadata/metadata'
 
 module BrighterPlanet
-  autoload :Metadata, 'brighter_planet_metadata/metadata'
   def self.metadata
     Metadata.instance
   end

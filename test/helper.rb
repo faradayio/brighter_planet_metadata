@@ -2,44 +2,21 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 require 'test/unit'
-require 'fakeweb'
-require 'fakefs/safe'
+require 'webmock/test_unit'
 require 'fileutils'
-require 'active_support/string_inquirer'
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'brighter_planet_metadata'
+
 class Test::Unit::TestCase
   def setup
     BrighterPlanet.metadata.refresh
-    FakeWeb.clean_registry
-    FakeWeb.allow_net_connect = false
-    Rails.application.certified = false
-    Rails.root = '/var/www/myapp'
-    Rails.env = ActiveSupport::StringInquirer.new 'development'
+    WebMock.enable!
+    WebMock.disable_net_connect!
   end
   def teardown
-    FakeFS::FileSystem.clear
-    FakeFS.deactivate!
-    FakeWeb.allow_net_connect = true
-    Rails.application.certified = false
-    Rails.root = nil
-  end
-end
-
-require 'singleton'
-require 'active_support/core_ext/module'
-module Rails
-  mattr_accessor :root, :env
-  def self.application
-    FakeApplication.instance
-  end
-  class FakeApplication
-    include ::Singleton
-    attr_writer :certified
-    def certified?
-      @certified == true
-    end
+    WebMock.reset!
+    WebMock.disable!
   end
 end
 

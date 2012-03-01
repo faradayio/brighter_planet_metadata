@@ -5,7 +5,6 @@ require "brighter_planet_metadata/version"
 Gem::Specification.new do |s|
   s.name        = "brighter_planet_metadata"
   s.version     = BrighterPlanetMetadata::VERSION
-  s.platform    = Gem::Platform::RUBY
   s.authors     = ["Seamus Abshere", "Andy Rossmeissl"]
   s.email       = ["seamus@abshere.net"]
   s.homepage    = "https://github.com/brighterplanet/brighter_planet_metadata"
@@ -22,13 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'activesupport', '>=2.3.4'
   s.add_dependency 'i18n' # activesupport?
   s.add_dependency 'cache_method'
-  s.add_development_dependency 'brighter_planet_deploy'
-  s.add_development_dependency 'fakeweb'
-  s.add_development_dependency 'test-unit'
-  s.add_development_dependency 'fakefs'
-  s.add_development_dependency 'earth'
-  s.add_development_dependency 'rake'
-  unless RUBY_VERSION > '1.9'
-    s.add_development_dependency 'fastercsv' # earth
-  end
+  s.add_dependency 'multi_json'
 end

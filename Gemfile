@@ -1,4 +1,8 @@
-source "http://rubygems.org"
+source :rubygems
 
-# Specify your gem's dependencies in brighter_planet_metadata.gemspec
 gemspec
+
+# development dependencies
+gem 'webmock'
+gem 'test-unit'
+gem 'rake'

@@ -2,10 +2,8 @@ require 'helper'
 
 class TestReal < Test::Unit::TestCase
   def setup
-    super
+    WebMock.disable!
     BrighterPlanet.metadata.refresh
-    FakeWeb.clean_registry
-    FakeWeb.allow_net_connect = true
     $old_fallback = BrighterPlanet::Metadata::FALLBACK
     silence_warnings { BrighterPlanet::Metadata.const_set 'FALLBACK', Hash.new([]) }
   end

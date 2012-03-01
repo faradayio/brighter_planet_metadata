@@ -3,19 +3,14 @@ require 'helper'
 class TestFallback < Test::Unit::TestCase
   def setup
     super
-    FakeWeb.clean_registry
-    FakeWeb.allow_net_connect = false
     [
       'http://data.brighterplanet.com/datasets.json',
-      'http://carbon.brighterplanet.com/emitters.json',
-      'http://certified.carbon.brighterplanet.com/emitters.json',
+      'http://impact.brighterplanet.com/emitters.json',
+      'http://certified.impact.brighterplanet.com/emitters.json',
       'http://data.brighterplanet.com/resources.json',
-      'http://carbon.brighterplanet.com/protocols.json',
+      'http://impact.brighterplanet.com/protocols.json',
     ].each do |url|
-      FakeWeb.register_uri  :get,
-                            url,
-                            :status => ["500", "Urg"],
-                            :body => nil
+      WebMock.stub_request(:get, url).to_return(:status => 500)
     end
   end
 

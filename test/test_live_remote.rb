@@ -5,25 +5,20 @@ require 'active_support/json/encoding'
 class TestLiveRemote < Test::Unit::TestCase
   def setup
     super
-    FakeWeb.clean_registry
-    FakeWeb.allow_net_connect = false
     {
       'http://data.brighterplanet.com/datasets.json'              => { 'datasets' => %w{ LiveRemoteDataset } },
-      'http://carbon.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter } },
-      'http://certified.carbon.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter } },
+      'http://impact.brighterplanet.com/emitters.json'            => { 'emitters' => %w{ LiveRemoteEmitter } },
+      'http://certified.impact.brighterplanet.com/emitters.json'  => { 'emitters' => %w{ LiveRemoteCertifiedEmitter } },
       'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource } },
-      'http://carbon.brighterplanet.com/protocols.json'           => { 'protocols' => { 'fooprotocol' => 'Foo Protocol' } },
+      'http://impact.brighterplanet.com/protocols.json'           => { 'protocols' => { 'fooprotocol' => 'Foo Protocol' } },
     }.each do |url, hsh|
-      FakeWeb.register_uri  :get,
-                            url,
-                            :status => ["200", "OK"],
-                            :body => hsh.to_json
+      WebMock.stub_request(:get, url).to_return(:status => 200, :body => MultiJson.encode(hsh))
     end
   end
     
   def test_refresh
     assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')
-    FakeWeb.register_uri :get, 'http://carbon.brighterplanet.com/emitters.json', :status => ["200", "OK"], :body => { 'emitters' => %w{LiveRemoteRefreshedEmitter}}.to_json
+    WebMock.stub_request(:get, 'http://impact.brighterplanet.com/emitters.json').to_return(:status => 200, :body => MultiJson.encode({ 'emitters' => %w{LiveRemoteRefreshedEmitter}}))
 
     # still the old value because it's cached...
     assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')
