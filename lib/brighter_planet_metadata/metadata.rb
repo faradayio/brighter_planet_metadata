@@ -1,5 +1,6 @@
 require 'singleton'
-require 'eat'
+require 'uri'
+require 'net/http'
 require 'multi_json'
 require 'active_support'
 require 'active_support/version'
@@ -86,7 +87,7 @@ module BrighterPlanet
         FALLBACK[k]
       else
         begin
-          hsh = ::MultiJson.decode eat(LIVE_URL[k])
+          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[k]))
           kk = (k == 'certified_emitters') ? 'emitters' : k # the live certified response will contain an 'emitters' key
           raise unless hsh.has_key? kk
           hsh[kk]

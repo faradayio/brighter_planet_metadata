@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.add_dependency 'eat'
   s.add_dependency 'activesupport', '>=2.3.4'
   s.add_dependency 'i18n' # activesupport?
   s.add_dependency 'cache_method'

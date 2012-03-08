@@ -1,7 +1,5 @@
 require 'helper'
 
-require 'active_support/json/encoding'
-
 class TestLiveRemote < Test::Unit::TestCase
   def setup
     super
