@@ -26,6 +26,23 @@ module BrighterPlanet
       'certified_emitters'  => 'http://certified.impact.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
       'protocols'           => 'http://impact.brighterplanet.com/protocols.json',
+
+      'automobiles_options'      => 'http://impact.brighterplanet.com/automobiles/options.json',
+      'automobile_trips_options' => 'http://impact.brighterplanet.com/automobile_trips/options.json',
+      'bus_trips_options'        => 'http://impact.brighterplanet.com/bus_trips/options.json',
+      'computations_options'     => 'http://impact.brighterplanet.com/computations/options.json',
+      'diets_options'            => 'http://impact.brighterplanet.com/diets/options.json',
+      'electricity_uses_options' => 'http://impact.brighterplanet.com/electricity_uses/options.json',
+      'flights_options'          => 'http://impact.brighterplanet.com/flights/options.json',
+      'fuel_purchases_options'   => 'http://impact.brighterplanet.com/fuel_purchases/options.json',
+      'lodgings_options'         => 'http://impact.brighterplanet.com/lodgings/options.json',
+      'meetings_options'         => 'http://impact.brighterplanet.com/meetings/options.json',
+      'motorcycles_options'      => 'http://impact.brighterplanet.com/motorcycles/options.json',
+      'pets_options'             => 'http://impact.brighterplanet.com/pets/options.json',
+      'purchases_options'        => 'http://impact.brighterplanet.com/purchases/options.json',
+      'rail_trips_options'       => 'http://impact.brighterplanet.com/rail_trips/options.json',
+      'residences_options'       => 'http://impact.brighterplanet.com/residences/options.json',
+      'shipments_options'        => 'http://impact.brighterplanet.com/shipments/options.json',
     }.freeze
     
     # sabshere 2/4/11 obv these have to be updated with some regularity
@@ -60,6 +77,11 @@ module BrighterPlanet
     # What protocols are recognized
     def protocols
       deep_copy_of_authoritative_value_or_fallback 'protocols'
+    end
+
+    # options (characteristics) available for a given emitter
+    def options(emitter)
+      deep_copy_of_authoritative_value_or_fallback "#{emitter.to_s.pluralize.downcase}_options"
     end
     
     # Clear out any cached values
