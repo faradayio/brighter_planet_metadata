@@ -80,19 +80,18 @@ module BrighterPlanet
     end
     
     # Used internally to pull a live list of emitters/datasets/etc. or fall back to a static one.
-    def authoritative_value_or_fallback(k)
-      k = k.to_s
-      if ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true'
-        $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{k}'}
-        FALLBACK[k]
+    def authoritative_value_or_fallback(meta_name)
+      meta_name = meta_name.to_s
+      if ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true' && FALLBACK.key?(meta_name)
+        $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{meta_name}'}
+        FALLBACK[meta_name]
       else
         begin
-          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[k]))
-          kk = (k == 'certified_emitters') ? 'emitters' : k # the live certified response will contain an 'emitters' key
-          raise unless hsh.has_key? kk
-          hsh[kk]
+          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
+          subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
+          hsh.key?(subkey) ? hsh[subkey] : hsh
         rescue ::Exception
-          FALLBACK[k]
+          FALLBACK[meta_name]
         end
       end
     end
