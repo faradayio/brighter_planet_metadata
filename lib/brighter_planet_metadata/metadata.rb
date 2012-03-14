@@ -26,6 +26,23 @@ module BrighterPlanet
       'certified_emitters'  => 'http://certified.impact.brighterplanet.com/emitters.json',
       'resources'           => 'http://data.brighterplanet.com/resources.json',
       'protocols'           => 'http://impact.brighterplanet.com/protocols.json',
+
+      'automobiles_options'      => 'http://impact.brighterplanet.com/automobiles/options.json',
+      'automobile_trips_options' => 'http://impact.brighterplanet.com/automobile_trips/options.json',
+      'bus_trips_options'        => 'http://impact.brighterplanet.com/bus_trips/options.json',
+      'computations_options'     => 'http://impact.brighterplanet.com/computations/options.json',
+      'diets_options'            => 'http://impact.brighterplanet.com/diets/options.json',
+      'electricity_uses_options' => 'http://impact.brighterplanet.com/electricity_uses/options.json',
+      'flights_options'          => 'http://impact.brighterplanet.com/flights/options.json',
+      'fuel_purchases_options'   => 'http://impact.brighterplanet.com/fuel_purchases/options.json',
+      'lodgings_options'         => 'http://impact.brighterplanet.com/lodgings/options.json',
+      'meetings_options'         => 'http://impact.brighterplanet.com/meetings/options.json',
+      'motorcycles_options'      => 'http://impact.brighterplanet.com/motorcycles/options.json',
+      'pets_options'             => 'http://impact.brighterplanet.com/pets/options.json',
+      'purchases_options'        => 'http://impact.brighterplanet.com/purchases/options.json',
+      'rail_trips_options'       => 'http://impact.brighterplanet.com/rail_trips/options.json',
+      'residences_options'       => 'http://impact.brighterplanet.com/residences/options.json',
+      'shipments_options'        => 'http://impact.brighterplanet.com/shipments/options.json',
     }.freeze
     
     # sabshere 2/4/11 obv these have to be updated with some regularity
@@ -61,6 +78,11 @@ module BrighterPlanet
     def protocols
       deep_copy_of_authoritative_value_or_fallback 'protocols'
     end
+
+    # options (characteristics) available for a given emitter
+    def options(emitter)
+      deep_copy_of_authoritative_value_or_fallback "#{emitter.to_s.pluralize.downcase}_options"
+    end
     
     # Clear out any cached values
     def refresh
@@ -80,19 +102,18 @@ module BrighterPlanet
     end
     
     # Used internally to pull a live list of emitters/datasets/etc. or fall back to a static one.
-    def authoritative_value_or_fallback(k)
-      k = k.to_s
-      if ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true'
-        $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{k}'}
-        FALLBACK[k]
+    def authoritative_value_or_fallback(meta_name)
+      meta_name = meta_name.to_s
+      if ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true' && FALLBACK.key?(meta_name)
+        $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{meta_name}'}
+        FALLBACK[meta_name]
       else
         begin
-          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[k]))
-          kk = (k == 'certified_emitters') ? 'emitters' : k # the live certified response will contain an 'emitters' key
-          raise unless hsh.has_key? kk
-          hsh[kk]
+          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
+          subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
+          hsh.key?(subkey) ? hsh[subkey] : hsh
         rescue ::Exception
-          FALLBACK[k]
+          FALLBACK[meta_name]
         end
       end
     end

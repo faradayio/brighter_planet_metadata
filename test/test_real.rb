@@ -28,4 +28,12 @@ class TestReal < Test::Unit::TestCase
   def test_protocols
     assert ::BrighterPlanet.metadata.protocols.values.include?('The Climate Registry')
   end
+
+  def test_options_flight
+    assert ::BrighterPlanet.metadata.options(:flight).keys.include?('fuel_use_coefficients')
+  end
+
+  def test_options_electricity_use
+    assert ::BrighterPlanet.metadata.options(:electricity_use).keys.include?('zip_code')
+  end
 end
