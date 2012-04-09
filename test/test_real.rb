@@ -30,10 +30,14 @@ class TestReal < Test::Unit::TestCase
   end
 
   def test_options_flight
-    assert ::BrighterPlanet.metadata.options(:flight).keys.include?('fuel_use_coefficients')
+    assert ::BrighterPlanet.metadata.options(:flight).include?('origin_airport')
   end
 
   def test_options_electricity_use
-    assert ::BrighterPlanet.metadata.options(:electricity_use).keys.include?('zip_code')
+    assert ::BrighterPlanet.metadata.options(:electricity_use).include?('zip_code')
+  end
+
+  def test_committees_flight
+    assert ::BrighterPlanet.metadata.committees(:flight).include?('energy')
   end
 end

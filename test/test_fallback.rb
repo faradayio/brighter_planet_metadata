@@ -4,11 +4,7 @@ class TestFallback < Test::Unit::TestCase
   def setup
     super
     [
-      'http://data.brighterplanet.com/datasets.json',
-      'http://impact.brighterplanet.com/emitters.json',
-      'http://certified.impact.brighterplanet.com/emitters.json',
-      'http://data.brighterplanet.com/resources.json',
-      'http://impact.brighterplanet.com/protocols.json',
+      %r{http.*brighterplanet.com.*}
     ].each do |url|
       WebMock.stub_request(:get, url).to_return(:status => 500)
     end
@@ -28,5 +24,17 @@ class TestFallback < Test::Unit::TestCase
   
   def test_protocols
     assert ::BrighterPlanet.metadata.protocols.values.include? 'The Climate Registry'
+  end
+
+  def test_options_flight
+    assert ::BrighterPlanet.metadata.options(:flight).include?('origin_airport')
+  end
+
+  def test_options_electricity_use
+    assert ::BrighterPlanet.metadata.options(:electricity_use).include?('zip_code')
+  end
+
+  def test_committees_flight
+    assert ::BrighterPlanet.metadata.committees(:flight).include?('energy')
   end
 end

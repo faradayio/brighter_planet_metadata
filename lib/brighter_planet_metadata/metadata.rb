@@ -43,16 +43,31 @@ module BrighterPlanet
       'rail_trips_options'       => 'http://impact.brighterplanet.com/rail_trips/options.json',
       'residences_options'       => 'http://impact.brighterplanet.com/residences/options.json',
       'shipments_options'        => 'http://impact.brighterplanet.com/shipments/options.json',
+
+      'automobiles_committees'      => 'http://impact.brighterplanet.com/automobiles/committees.json',
+      'automobile_trips_committees' => 'http://impact.brighterplanet.com/automobile_trips/committees.json',
+      'bus_trips_committees'        => 'http://impact.brighterplanet.com/bus_trips/committees.json',
+      'computations_committees'     => 'http://impact.brighterplanet.com/computations/committees.json',
+      'diets_committees'            => 'http://impact.brighterplanet.com/diets/committees.json',
+      'electricity_uses_committees' => 'http://impact.brighterplanet.com/electricity_uses/committees.json',
+      'flights_committees'          => 'http://impact.brighterplanet.com/flights/committees.json',
+      'fuel_purchases_committees'   => 'http://impact.brighterplanet.com/fuel_purchases/committees.json',
+      'lodgings_committees'         => 'http://impact.brighterplanet.com/lodgings/committees.json',
+      'meetings_committees'         => 'http://impact.brighterplanet.com/meetings/committees.json',
+      'motorcycles_committees'      => 'http://impact.brighterplanet.com/motorcycles/committees.json',
+      'pets_committees'             => 'http://impact.brighterplanet.com/pets/committees.json',
+      'purchases_committees'        => 'http://impact.brighterplanet.com/purchases/committees.json',
+      'rail_trips_committees'       => 'http://impact.brighterplanet.com/rail_trips/committees.json',
+      'residences_committees'       => 'http://impact.brighterplanet.com/residences/committees.json',
+      'shipments_committees'        => 'http://impact.brighterplanet.com/shipments/committees.json',
     }.freeze
-    
-    # sabshere 2/4/11 obv these have to be updated with some regularity
-    FALLBACK = {
-      'datasets'            => %w{ AutomobileIndustry FlightIndustry },
-      'emitters'            => %w{ Automobile AutomobileTrip BusTrip Computation Diet ElectricityUse Flight FuelPurchase Lodging Meeting Motorcycle Pet Purchase RailTrip Residence Shipment },
-      'certified_emitters'  => %w{ },
-      'resources'           => %w{ AirConditionerUse Aircraft AircraftClass AircraftFuelUseEquation Airline Airport AutomobileFuel AutomobileMake AutomobileMakeFleetYear AutomobileMakeModel AutomobileMakeModelYear AutomobileMakeModelYearVariant AutomobileMakeYear AutomobileSizeClass AutomobileSizeClassYear AutomobileTypeFuelAge AutomobileTypeFuelControl AutomobileTypeFuelYear AutomobileTypeFuelYearAge AutomobileTypeFuelYearControl AutomobileTypeYear Breed BreedGender BtsAircraft BusClass BusFuel BusFuelControl BusFuelYearControl Carrier CarrierMode CensusDivision CensusRegion ClimateDivision ClothesMachineUse ComputationCarrier ComputationCarrierInstanceClass ComputationCarrierRegion Country DietClass DishwasherUse EgridRegion EgridSubregion FlightDistanceClass FlightSeatClass FlightSegment FoodGroup Fuel FuelPrice FuelType FuelYear Gender GreenhouseGas LodgingClass PetroleumAdministrationForDefenseDistrict RailClass ResidenceAppliance ResidenceClass ResidenceFuelPrice ResidenceFuelType ResidentialEnergyConsumptionSurveyResponse ShipmentMode Species State Urbanity ZipCode },
-      'protocols'           => { 'ghg_protocol_scope_3' => 'Greenhouse Gas Protocol Scope 3', 'iso' => 'ISO 14064-1', 'tcr' => 'The Climate Registry', 'ghg_protocol_scope_1' => 'Greenhouse Gas Protocol Scope 1' },
-    }.freeze
+
+    FALLBACK = begin
+      ::MultiJson.decode(::File.read(::File.expand_path('../fallbacks.json', __FILE__))).freeze
+    rescue
+      $stderr.puts "[brighter_planet_metadata] Error while loading fallbacks. Please reinstall library."
+      {}
+    end
     
     # What resources are available.
     def resources
@@ -83,6 +98,11 @@ module BrighterPlanet
     def options(emitter)
       deep_copy_of_authoritative_value_or_fallback "#{emitter.to_s.pluralize.downcase}_options"
     end
+
+    # committees (decisions) available for a given emitter
+    def committees(emitter)
+      deep_copy_of_authoritative_value_or_fallback "#{emitter.to_s.pluralize.downcase}_committees"
+    end
     
     # Clear out any cached values
     def refresh
@@ -109,10 +129,16 @@ module BrighterPlanet
         FALLBACK[meta_name]
       else
         begin
-          hsh = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
-          subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
-          hsh.key?(subkey) ? hsh[subkey] : hsh
+          actual = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
+          case actual
+          when ::Hash
+            subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
+            actual.key?(subkey) ? actual[subkey] : actual
+          else
+            actual
+          end
         rescue ::Exception
+          $stderr.puts "[brighter_planet_metadata] Rescued from #{$!.inspect} when trying to get #{meta_name}"
           FALLBACK[meta_name]
         end
       end
