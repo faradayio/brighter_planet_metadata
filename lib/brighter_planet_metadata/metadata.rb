@@ -63,7 +63,7 @@ module BrighterPlanet
     }.freeze
 
     FALLBACK = begin
-      ::MultiJson.decode(::File.read(::File.expand_path('../fallbacks.json', __FILE__))).freeze
+      ::MultiJson.load(::File.read(::File.expand_path('../fallbacks.json', __FILE__))).freeze
     rescue
       $stderr.puts "[brighter_planet_metadata] Error while loading fallbacks. Please reinstall library."
       {}
@@ -129,7 +129,7 @@ module BrighterPlanet
         FALLBACK[meta_name]
       else
         begin
-          actual = ::MultiJson.decode ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
+          actual = ::MultiJson.load ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
           case actual
           when ::Hash
             subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key

@@ -10,13 +10,13 @@ class TestLiveRemote < Test::Unit::TestCase
       'http://data.brighterplanet.com/resources.json'             => { 'resources' => %w{ LiveRemoteResource } },
       'http://impact.brighterplanet.com/protocols.json'           => { 'protocols' => { 'fooprotocol' => 'Foo Protocol' } },
     }.each do |url, hsh|
-      WebMock.stub_request(:get, url).to_return(:status => 200, :body => MultiJson.encode(hsh))
+      WebMock.stub_request(:get, url).to_return(:status => 200, :body => MultiJson.dump(hsh))
     end
   end
     
   def test_refresh
     assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')
-    WebMock.stub_request(:get, 'http://impact.brighterplanet.com/emitters.json').to_return(:status => 200, :body => MultiJson.encode({ 'emitters' => %w{LiveRemoteRefreshedEmitter}}))
+    WebMock.stub_request(:get, 'http://impact.brighterplanet.com/emitters.json').to_return(:status => 200, :body => MultiJson.dump({ 'emitters' => %w{LiveRemoteRefreshedEmitter}}))
 
     # still the old value because it's cached...
     assert ::BrighterPlanet.metadata.emitters.include?('LiveRemoteEmitter')

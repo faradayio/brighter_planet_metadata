@@ -25,6 +25,6 @@ task :fallbacks do
     memo
   end
   File.open(File.expand_path('../lib/brighter_planet_metadata/fallbacks.json', __FILE__), 'w') do |f|
-    f.write MultiJson.encode(fallbacks)
+    f.write MultiJson.dump(fallbacks)
   end
 end
