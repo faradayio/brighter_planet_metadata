@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://data.brighterplanet.com/datasets.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 09 Jul 2012 18:04:08 GMT
+      server:
+      - Apache/2.2.20 (Ubuntu)
+      x-powered-by:
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.12
+      vary:
+      - Accept-Encoding
+      x-ua-compatible:
+      - IE=Edge,chrome=1
+      etag:
+      - ! '"3dd4e8c9a32e2e2fdc100165df3842db"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-request-id:
+      - a69b7768cface182137b001674fbbcbc
+      x-runtime:
+      - '0.008915'
+      x-rack-cache:
+      - miss
+      status:
+      - '200'
+      content-length:
+      - '52'
+      content-type:
+      - application/json; charset=utf-8
+    body:
+      encoding: US-ASCII
+      string: ! '{"datasets":["AutomobileIndustry","FlightIndustry"]}'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:04:08 GMT
+recorded_with: VCR 2.2.2
