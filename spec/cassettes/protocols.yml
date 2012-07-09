@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://impact.brighterplanet.com/protocols.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx
+      date:
+      - Mon, 09 Jul 2012 18:04:09 GMT
+      content-type:
+      - application/json
+      connection:
+      - keep-alive
+      status:
+      - 200 OK
+      etag:
+      - 3e59f1000685d6f0e3466163497473b5
+      content-length:
+      - '179'
+      x-varnish:
+      - '437695089'
+      age:
+      - '0'
+      via:
+      - 1.1 varnish
+    body:
+      encoding: US-ASCII
+      string: ! '{"protocols":{"ghg_protocol_scope_3":"Greenhouse Gas Protocol Scope
+        3","iso":"ISO 14064-1","tcr":"The Climate Registry","ghg_protocol_scope_1":"Greenhouse
+        Gas Protocol Scope 1"}}
+
+'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:04:09 GMT
+recorded_with: VCR 2.2.2

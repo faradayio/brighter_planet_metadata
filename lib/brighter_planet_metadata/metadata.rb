@@ -128,19 +128,20 @@ module BrighterPlanet
         $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{meta_name}'}
         FALLBACK[meta_name]
       else
+        value = nil
         begin
-          actual = ::MultiJson.load ::Net::HTTP.get(::URI.parse(LIVE_URL[meta_name]))
-          case actual
-          when ::Hash
+          response = Net::HTTP.get_response(URI.parse(LIVE_URL[meta_name]))
+          json = MultiJson.load response.body if response.is_a?(Net::HTTPSuccess)
+          actual = if json.is_a?(Hash)
             subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
-            actual.key?(subkey) ? actual[subkey] : actual
+            json.key?(subkey) ? json[subkey] : json
           else
-            actual
+            json
           end
         rescue ::Exception
           $stderr.puts "[brighter_planet_metadata] Rescued from #{$!.inspect} when trying to get #{meta_name}"
-          FALLBACK[meta_name]
         end
+        actual || FALLBACK[meta_name]
       end
     end
     cache_method :authoritative_value_or_fallback, 60
