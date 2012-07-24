@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://impact.brighterplanet.com/flights/options.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx
+      date:
+      - Mon, 09 Jul 2012 18:12:57 GMT
+      content-type:
+      - application/json
+      connection:
+      - keep-alive
+      status:
+      - 200 OK
+      etag:
+      - 4d502e90c8e12d989392b9aa315bbe28
+      content-length:
+      - '201'
+      x-varnish:
+      - '875256476'
+      age:
+      - '0'
+      via:
+      - 1.1 varnish
+    body:
+      encoding: US-ASCII
+      string: ! '["origin_airport","destination_airport","aircraft","airline","fuel","distance_class","seat_class","date","segments_per_trip","trips","load_factor","seats","distance_estimate","flight_segment_row_hash"]'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:12:57 GMT
+recorded_with: VCR 2.2.2

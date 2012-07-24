@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://impact.brighterplanet.com/electricity_uses/options.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx
+      date:
+      - Mon, 09 Jul 2012 18:12:58 GMT
+      content-type:
+      - application/json
+      connection:
+      - keep-alive
+      status:
+      - 200 OK
+      etag:
+      - 00a113d5eb9389ff9cedcc7497f9bfe2
+      content-length:
+      - '46'
+      x-varnish:
+      - '749708588'
+      age:
+      - '0'
+      via:
+      - 1.1 varnish
+    body:
+      encoding: US-ASCII
+      string: ! '["zip_code","state","country","date","energy"]'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:12:58 GMT
+recorded_with: VCR 2.2.2

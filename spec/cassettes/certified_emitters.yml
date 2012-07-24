@@ -1,0 +1,42 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://certified.impact.brighterplanet.com/emitters.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx
+      date:
+      - Mon, 09 Jul 2012 18:04:09 GMT
+      content-type:
+      - application/json
+      connection:
+      - keep-alive
+      status:
+      - 200 OK
+      content-length:
+      - '81'
+      x-varnish:
+      - '333471184'
+      age:
+      - '0'
+      via:
+      - 1.1 varnish
+    body:
+      encoding: US-ASCII
+      string: ! '{"emitters":["AutomobileTrip","BusTrip","Flight","Lodging","Meeting","RailTrip"]}'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:04:09 GMT
+recorded_with: VCR 2.2.2

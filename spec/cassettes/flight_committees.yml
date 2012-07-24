@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://impact.brighterplanet.com/flights/committees.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - nginx
+      date:
+      - Mon, 09 Jul 2012 18:12:58 GMT
+      content-type:
+      - application/json
+      connection:
+      - keep-alive
+      status:
+      - 200 OK
+      etag:
+      - db7a87cad0f5e209964783aec90d7921
+      content-length:
+      - '405'
+      x-varnish:
+      - '117606441'
+      age:
+      - '0'
+      via:
+      - 1.1 varnish
+    body:
+      encoding: US-ASCII
+      string: ! '["carbon","ghg_emission_factor","aviation_multiplier","energy","fuel_use","fuel_per_segment","seat_class_multiplier","distance_class_seat_class","distance_class","adjusted_distance_per_segment","adjusted_distance","distance","route_inefficiency_factor","dogleg_factor","fuel_use_coefficients","fuel","passengers","seats","load_factor","freight_share","trips","country","cohort","segments_per_trip","date"]'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:12:58 GMT
+recorded_with: VCR 2.2.2

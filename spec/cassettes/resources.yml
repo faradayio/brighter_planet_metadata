@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://data.brighterplanet.com/resources.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      accept:
+      - ! '*/*'
+      user-agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 09 Jul 2012 18:04:09 GMT
+      server:
+      - Apache/2.2.20 (Ubuntu)
+      x-powered-by:
+      - Phusion Passenger (mod_rails/mod_rack) 3.0.12
+      vary:
+      - Accept-Encoding
+      x-ua-compatible:
+      - IE=Edge,chrome=1
+      etag:
+      - ! '"552b1a326497c4d66c8e870959d51615"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-request-id:
+      - 043b672de9a8a9f4499500a181e16203
+      x-runtime:
+      - '0.005313'
+      x-rack-cache:
+      - miss
+      status:
+      - '200'
+      content-length:
+      - '1736'
+      content-type:
+      - application/json; charset=utf-8
+    body:
+      encoding: US-ASCII
+      string: ! '{"resources":["AirConditionerUse","Aircraft","Airline","Airport","AutomobileActivityYear","AutomobileActivityYearType","AutomobileActivityYearTypeFuel","AutomobileFuel","AutomobileMake","AutomobileMakeModel","AutomobileMakeModelYear","AutomobileMakeModelYearVariant","AutomobileMakeYear","AutomobileMakeYearFleet","AutomobileModel","AutomobileSizeClass","AutomobileTypeFuel","AutomobileTypeFuelControl","AutomobileTypeFuelYear","AutomobileTypeFuelYearControl","AutomobileYear","Breed","BreedGender","BtsAircraft","BusClass","BusFuel","BusFuelControl","BusFuelYearControl","Carrier","CarrierMode","CbecsEnergyIntensity","CensusDivision","CensusRegion","ClimateDivision","ClothesMachineUse","CommercialBuildingEnergyConsumptionSurveyResponse","ComputationCarrier","ComputationCarrierInstanceClass","ComputationCarrierRegion","Country","CountryLodgingClass","CountryRailClass","CountryRailTraction","CountryRailTractionClass","DietClass","DishwasherUse","EgridCountry","EgridRegion","EgridSubregion","ElectricMarket","ElectricUtility","FlightDistanceClass","FlightDistanceClassSeatClass","FlightSeatClass","FlightSegment","FoodGroup","Fuel","FuelPrice","FuelType","FuelYear","Gender","GreenButtonAdoption","GreenhouseGas","Industry","LodgingClass","MecsEnergy","MecsRatio","Naics2002","Naics2002Naics2007Concordance","Naics2002Sic1987Concordance","Naics2007","NationalTransitDatabaseCompany","NationalTransitDatabaseMode","NationalTransitDatabaseRecord","PetroleumAdministrationForDefenseDistrict","RailClass","RailCompany","RailFuel","RailTraction","ResidenceAppliance","ResidenceClass","ResidenceFuelPrice","ResidenceFuelType","ResidentialEnergyConsumptionSurveyResponse","ShipmentMode","Sic1987","Species","State","Urbanity","ZipCode"]}'
+    http_version: '1.1'
+  recorded_at: Mon, 09 Jul 2012 18:04:09 GMT
+recorded_with: VCR 2.2.2
