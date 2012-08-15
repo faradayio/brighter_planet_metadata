@@ -24,7 +24,7 @@ module BrighterPlanet
       'datasets'            => 'http://data.brighterplanet.com/datasets.json',
       'emitters'            => 'http://impact.brighterplanet.com/emitters.json',
       'certified_emitters'  => 'http://certified.impact.brighterplanet.com/emitters.json',
-      'resources'           => 'http://data.brighterplanet.com/resources.json',
+      'resources'           => 'http://data.brighterplanet.com/',
       'protocols'           => 'http://impact.brighterplanet.com/protocols.json',
 
       'automobiles_options'      => 'http://impact.brighterplanet.com/automobiles/options.json',
@@ -71,7 +71,9 @@ module BrighterPlanet
     
     # What resources are available.
     def resources
-      deep_copy_of_authoritative_value_or_fallback 'resources'
+      deep_copy_of_authoritative_value_or_fallback 'resources' do |json|
+        json['_embedded']['resources'].map { |r| r['name'] }
+      end
     end
 
     # What certified_emitters are available.
@@ -117,12 +119,13 @@ module BrighterPlanet
     
     private
         
-    def deep_copy_of_authoritative_value_or_fallback(k)
-      authoritative_value_or_fallback(k).clone
+    def deep_copy_of_authoritative_value_or_fallback(k, &blk)
+      authoritative_value_or_fallback(k, &blk).clone
     end
     
     # Used internally to pull a live list of emitters/datasets/etc. or fall back to a static one.
-    def authoritative_value_or_fallback(meta_name)
+    def authoritative_value_or_fallback(meta_name, &blk)
+      actual = nil
       meta_name = meta_name.to_s
       if ::ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true' && FALLBACK.key?(meta_name)
         $stderr.puts %{ENV['BRIGHTER_PLANET_METADATA_FALLBACKS_ONLY'] == 'true', so using fallback value for '#{meta_name}'}
@@ -130,16 +133,22 @@ module BrighterPlanet
       else
         value = nil
         begin
-          response = Net::HTTP.get_response(URI.parse(LIVE_URL[meta_name]))
-          json = MultiJson.load response.body if response.is_a?(Net::HTTPSuccess)
-          actual = if json.is_a?(Hash)
-            subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
-            json.key?(subkey) ? json[subkey] : json
-          else
-            json
+          uri = URI.parse(LIVE_URL[meta_name])
+          req = Net::HTTP::Get.new(uri.request_uri)
+          req['Accept'] = 'application/json'
+          res = Net::HTTP.start(uri.hostname, uri.port) { |h| h.request(req) }
+          unless res.is_a?(Net::HTTPSuccess)
+            json = MultiJson.load res.body 
+            if block_given?
+              blk.call json
+            else
+              subkey = (meta_name == 'certified_emitters') ? 'emitters' : meta_name # the live certified response will contain an 'emitters' key
+              json.key?(subkey) ? json[subkey] : json
+            end
           end
         rescue ::Exception
           $stderr.puts "[brighter_planet_metadata] Rescued from #{$!.inspect} when trying to get #{meta_name}"
+          $stderr.puts uri, res.body
         end
         actual || FALLBACK[meta_name]
       end
